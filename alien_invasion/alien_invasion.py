@@ -1,7 +1,11 @@
+# Spencer Augenstein
+# Alien Invasion Game
+# Fun game project that involves shooting down alien ships. Based on Python Crash Course by Eric Matthes
+# Created 3/19/2025 | Updated: 3/19/2025
+
+# Import libraries and local files
 import sys
-
 import pygame
-
 from settings import Settings
 from ship import Ship
 
@@ -26,25 +30,34 @@ class AlienInvasion:
            self._update_screen()
            
     def _check_events(self):
-        # Check for specific commands
+        """Check for specific event commands """
         for event in pygame.event.get():
             # Detect if the game should be closed
             if event.type == pygame.QUIT:
                 sys.exit()
-                
-            # Move ship while key is pressed
+            # Detect keypresses
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
-                    self.ship.moving_left = True
-                elif event.key == pygame.K_RIGHT:
-                    self.ship.moving_right = True
-                    
-            # Stop moving ship when key is released
+                self._check_keydown_events(event)
             elif event.type == pygame.KEYUP:
-                if event.key == pygame.K_LEFT:
-                    self.ship.moving_left = False
-                elif event.key == pygame.K_RIGHT:
-                    self.ship.moving_right = False
+                self._check_keyup_events(event)
+
+    def _check_keydown_events(self, event):
+        """Detect when keys are pressed"""
+        # Ship movement
+        if event.key == pygame.K_LEFT:
+            self.ship.moving_left = True
+        elif event.key == pygame.K_RIGHT:
+            self.ship.moving_right = True
+        # Quit game
+        elif event.key == pygame.K_q:
+            sys.exit()
+
+    def _check_keyup_events(self, event):
+        """Stop moving ship when key is released"""
+        if event.key == pygame.K_LEFT:
+            self.ship.moving_left = False
+        elif event.key == pygame.K_RIGHT:
+            self.ship.moving_right = False
 
     def _update_screen(self):
         # Screen properties
@@ -53,7 +66,7 @@ class AlienInvasion:
     
         # Draw most recent screen
         pygame.display.flip()
-    
+
 if __name__ == '__main__':
     # Run game instance
     alien = AlienInvasion()
