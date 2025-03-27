@@ -1,7 +1,7 @@
 # Spencer Augenstein
 # Alien Invasion Game
 # Fun game project that involves shooting down alien ships. Based on Python Crash Course by Eric Matthes
-# Created 3/19/2025 | Updated: 3/19/2025
+# Created: 3/19/2025 | Updated: 3/20/2025
 
 # Import libraries and local files
 import sys
