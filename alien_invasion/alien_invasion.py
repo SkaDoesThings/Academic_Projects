@@ -6,7 +6,10 @@
 # Import libraries and local files
 import sys
 import pygame
+from time import sleep
+
 from settings import Settings
+from game_stats import GameStats
 from ship import Ship
 from bullet import Bullet
 from alien import Alien
@@ -22,20 +25,28 @@ class AlienInvasion:
         self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
         pygame.display.set_caption("Alien Invasion")
         
+        # Create game objects
         self.ship = Ship(self)        
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
         
+        # Store game statistics
+        self.stats = GameStats(self)
+        
+        # Create alien fleet
         self._create_fleet()
         
     def run_game(self):
         """Main game loop"""
         while True:
-           self._check_events()
-           self.ship.update()
-           self._update_bullets()
-           self._update_aliens()
-           self._update_screen()
+            self._check_events()
+
+            if self.stats.game_active:
+                self.ship.update()
+                self._update_bullets()
+                self._update_aliens()
+
+            self._update_screen()
 
 # -=-=-= ( Check for Keys ) =-=-=- 
           
@@ -102,6 +113,10 @@ class AlienInvasion:
         self._check_fleet_edges()
         # Update position of all aliens
         self.aliens.update()
+        
+        # Detect alien-ship collisions
+        if pygame.sprite.spritecollideany(self.ship, self.aliens):
+            self._ship_hit()
 
     def _update_screen(self):
         # Screen properties
@@ -164,13 +179,44 @@ class AlienInvasion:
             alien.rect.y += self.settings.fleet_drop_speed
         # Change alien direction
         self.settings.fleet_direction *= -1
-            
+        
+    def _check_aliens_bottom(self):
+        # Check if aliens hit the bottom playfield border
+        for alien in self.aliens.sprites():
+            if alien.rect.bottom >= self.settings.screen_height:
+                # Make ship loose a life
+                self._ship_hit()
+                break
+     
+# -=-=-= ( Manage Collisions ) =-=-=-       
+    
     def _check_bullet_alien_collisions(self):
         # Destory existing bullets and create new alien fleet
         if not self.aliens:
             self.bullets.empty()
+            self._create_fleet()        
+
+    def _ship_hit(self):
+        if self.stats.lives_left > 0:
+            # Decrease lives by 1.
+            self.stats.lives_left -= 1
+
+            # Get rid of bullets and aliens
+            self.bullets.empty()
+            self.aliens.empty()
+
+            # Create a new fleet and center the ship.
             self._create_fleet()
-        
+            self.ship.center_ship()
+
+            # Briefly pause
+            sleep(0.5)
+        else:
+            print("!! Game Over !!")
+            self.stats.game_active = False
+
+            
+
 # -=-=-=-=-= ( Run Game ) =-=-=-=-=-
     
 if __name__ == '__main__':

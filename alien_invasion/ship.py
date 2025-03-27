@@ -29,7 +29,6 @@ class Ship:
         self.on_left_wall = False
         self.on_right_wall = False
 
-        
     def update(self):
         # Universal movement method
         def move_ship(dx, dy):
@@ -97,3 +96,7 @@ class Ship:
         # Draw ship at its current location
         self.screen.blit(final_image, self.rect)
         
+    def center_ship(self):
+        self.rect.midbottom = self.screen_rect.midbottom
+        self.x = float(self.rect.x)
+        self.y = float(self.rect.y)
