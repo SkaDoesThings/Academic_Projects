@@ -100,17 +100,34 @@ class AlienInvasion:
     def _create_fleet(self):
         # Initialize alien
         alien = Alien(self)
-        alien_width = alien.rect.width
+        alien_width, alien_height = alien.rect.size
+        
         # Find out how many aliens can be placed based on screen size
         avalible_space_x = self.settings.screen_width - (2 * alien_width)
-        number_aliens_x = avalible_space_x // (2 * alien_width)
+        aliens_per_row = avalible_space_x // (2 * alien_width)
         
-        # Materialize a row of aliens
-        for alien_number in range(number_aliens_x):
-            alien = Alien(self)
-            alien.x = alien_width + 2 * alien_width * alien_number
-            alien.rect.x = alien.x
-            self.aliens.add(alien)
+        ship_height = self.ship.rect.height
+        avalible_space_y = (self.settings.screen_height - (3 * alien_height) - ship_height)
+        number_of_rows = avalible_space_y  // ( 2 * alien_height)
+        
+        # Materialize a row of aliens for each row
+        for row_number in range(number_of_rows):
+            for alien_number in range(aliens_per_row):
+                self._create_alien(alien_number, row_number)
+    
+    def _create_alien(self, alien_number, row_number):
+        # Initialize alien
+        alien = Alien(self)
+    
+        # Determine x and y sizes
+        alien_width, alien_height = alien.rect.size
+        alien.x = alien_width + 2 * alien_width * alien_number
+        
+        alien.rect.x = alien.x
+        alien.rect.y = alien_height + 2 * alien.rect.height * row_number
+    
+        # Officially add the aliens
+        self.aliens.add(alien)
 
 if __name__ == '__main__':
     # Run game instance
