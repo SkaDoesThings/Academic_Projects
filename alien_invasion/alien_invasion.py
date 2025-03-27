@@ -1,7 +1,7 @@
 # Spencer Augenstein
 # Alien Invasion Game
 # Fun game project that involves shooting down alien ships. Based on Python Crash Course by Eric Matthes
-# Created: 3/19/2025 | Updated: 3/20/2025
+# Created: 3/26/2025 | Updated: 3/20/2025
 
 # Import libraries and local files
 import sys
@@ -9,6 +9,7 @@ import pygame
 from settings import Settings
 from ship import Ship
 from bullet import Bullet
+from alien import Alien
 
 class AlienInvasion:
     """Manage assets and behavior"""
@@ -23,7 +24,9 @@ class AlienInvasion:
         
         self.ship = Ship(self)        
         self.bullets = pygame.sprite.Group()
-
+        self.aliens = pygame.sprite.Group()
+        
+        self._create_fleet()
         
     def run_game(self):
         """Main game loop"""
@@ -89,9 +92,25 @@ class AlienInvasion:
         # Update all bullets
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
+        self.aliens.draw(self.screen)
     
         # Draw most recent screen
         pygame.display.flip()
+        
+    def _create_fleet(self):
+        # Initialize alien
+        alien = Alien(self)
+        alien_width = alien.rect.width
+        # Find out how many aliens can be placed based on screen size
+        avalible_space_x = self.settings.screen_width - (2 * alien_width)
+        number_aliens_x = avalible_space_x // (2 * alien_width)
+        
+        # Materialize a row of aliens
+        for alien_number in range(number_aliens_x):
+            alien = Alien(self)
+            alien.x = alien_width + 2 * alien_width * alien_number
+            alien.rect.x = alien.x
+            self.aliens.add(alien)
 
 if __name__ == '__main__':
     # Run game instance
