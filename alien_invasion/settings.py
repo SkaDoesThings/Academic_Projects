@@ -19,6 +19,7 @@ class Settings:
         self.bullet_color = (60, 60, 60)
         
         # Alien settings
+        self.alien_wave = 1
         self.alien_speed = 0.1
         self.fleet_drop_speed = 10
         # Value of 1 is right, -1 is left

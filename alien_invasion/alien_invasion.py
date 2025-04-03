@@ -13,6 +13,7 @@ from game_stats import GameStats
 from ship import Ship
 from bullet import Bullet
 from alien import Alien
+from button import Button
 
 class AlienInvasion:
     """Manage assets and behavior"""
@@ -35,6 +36,9 @@ class AlienInvasion:
         
         # Create alien fleet
         self._create_fleet()
+        
+        # Create play button
+        self.play_button = Button(self, "Play Game")
         
     def run_game(self):
         """Main game loop"""
@@ -61,7 +65,15 @@ class AlienInvasion:
                 self._check_keydown_events(event)
             elif event.type == pygame.KEYUP:
                 self._check_keyup_events(event)
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_position = pygame.mouse.get_pos()
+                self._check_click_event(mouse_position)
 
+    def _check_click_event(self, mouse_position):
+        """React to mouse click events. Start game when player clicks play"""
+        if self.play_button.rect.collidepoint(mouse_position):
+            self.stats.game_active = True
+        
     def _check_keydown_events(self, event):
         """Detect when keys are pressed"""
         # Ship movement
@@ -128,6 +140,10 @@ class AlienInvasion:
             bullet.draw_bullet()
         self.aliens.draw(self.screen)
     
+        # Draw the play button when game is inactive
+        if not self.stats.game_active:
+            self.play_button.draw_button()
+        
         # Draw most recent screen
         pygame.display.flip()
         
@@ -144,13 +160,20 @@ class AlienInvasion:
         
         ship_height = self.ship.rect.height
         avalible_space_y = (self.settings.screen_height - (3 * alien_height) - ship_height)
-        number_of_rows = avalible_space_y  // ( 2 * alien_height)
+        # Changed the variable of 2 -> 1 for the pattern to work
+        number_of_rows = avalible_space_y // (1 * alien_height)
         
         # Materialize a row of aliens for each row
         for row_number in range(number_of_rows):
             for alien_number in range(aliens_per_row):
-                self._create_alien(alien_number, row_number)
-    
+                
+                if (self.settings.alien_wave == 1):
+                    # Create diagonal patterns by checking if the x and y are equal for each integer on
+                    # the grid and a formula to create an inverse diagonal
+                    if (alien_number == row_number or alien_number == (aliens_per_row - row_number - 1)):
+                        # Divide row_number by 2 to compress the pattern to the top half of the screen
+                        self._create_alien((alien_number), (row_number / 2))
+            
     def _create_alien(self, alien_number, row_number):
         # Initialize alien
         alien = Alien(self)
@@ -215,11 +238,11 @@ class AlienInvasion:
             print("!! Game Over !!")
             self.stats.game_active = False
 
-            
 
 # -=-=-=-=-= ( Run Game ) =-=-=-=-=-
     
 if __name__ == '__main__':
+    
     # Run game instance
     alien = AlienInvasion()
     alien.run_game()
