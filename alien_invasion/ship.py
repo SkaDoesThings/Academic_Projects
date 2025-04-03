@@ -36,17 +36,17 @@ class Ship:
             self.y += dy * self.settings.ship_speed 
         
         # Switch to the left wall on contact
-        if self.rect.left == 0:
+        if (self.rect.left == 0):
             self.on_left_wall = True
             move_ship(1, -1)
             
         # Switch to the right wall on contact
-        elif self.rect.right == self.screen_rect.right:
+        elif (self.rect.right == self.screen_rect.right):
             self.on_right_wall = True
             move_ship(1, -1)
              
         # Leave the corresponding wall
-        elif self.rect.bottom >= self.screen_rect.bottom:
+        elif (self.rect.bottom >= self.screen_rect.bottom):
             if (self.on_left_wall == True):
                 self.on_left_wall = False 
                 move_ship(1, -1)
@@ -59,24 +59,24 @@ class Ship:
         # Also check position to prevent ship from moving past the window.    
             
         # Default left and right movement
-        if self.on_left_wall == False and self.on_right_wall == False:     
-            if self.moving_left and self.rect.left > 0:
+        if (self.on_left_wall == False and self.on_right_wall == False):     
+            if (self.moving_left and self.rect.left > 0):
                 move_ship(-1, 0)
-            elif self.moving_right and self.rect.right < self.screen_rect.right:
+            elif (self.moving_right and self.rect.right < self.screen_rect.right):
                 move_ship(1, 0)
         
         # Movement when on left wall        
-        elif self.on_left_wall == True:
-            if self.moving_left and self.rect.top > 0:
+        elif (self.on_left_wall == True):
+            if (self.moving_left and self.rect.top > 0):
                 move_ship(0, -1)
-            elif self.moving_right and self.rect.bottom < self.screen_rect.bottom:
+            elif (self.moving_right and self.rect.bottom < self.screen_rect.bottom):
                 move_ship(0, 1)
         
         # Movement when on right wall
-        elif self.on_right_wall == True:
-            if self.moving_left and self.rect.bottom < self.screen_rect.bottom:
+        elif (self.on_right_wall == True):
+            if (self.moving_left and self.rect.bottom < self.screen_rect.bottom):
                 move_ship(0, 1)
-            elif self.moving_right and self.rect.top > 0:
+            elif (self.moving_right and self.rect.top > 0):
                 move_ship(0, -1)
             
         # Update rect object from the self.position values
@@ -88,9 +88,9 @@ class Ship:
         final_image = self.image
         
         # Flip the ship image based on its current wall
-        if self.on_left_wall == True:
+        if (self.on_left_wall == True):
             final_image = pygame.transform.rotate(self.image, -90)
-        if self.on_right_wall == True:
+        if (self.on_right_wall == True):
             final_image = pygame.transform.rotate(self.image, 90)
 
         # Draw ship at its current location
