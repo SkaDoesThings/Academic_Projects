@@ -13,3 +13,4 @@ class GameStats:
     def reset_stats(self):
         self.lives_left = self.settings.ship_lives
         self.score = 0
+        self.wave = 1

@@ -1,10 +1,13 @@
 import pygame
+from pygame.sprite import Sprite
 
-class Ship:
+class Ship(Sprite):
     """Class to manage the ship"""
-    
-    # Note: Rect stands for rectangle
+
     def __init__(self, game):
+        """Initialize ship and set starting positoon"""
+        super().__init__()
+        
         # Initilize game scren for ship 
         self.screen = game.screen
         self.screen_rect = game.screen.get_rect()
