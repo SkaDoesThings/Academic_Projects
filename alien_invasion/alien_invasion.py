@@ -297,4 +297,3 @@ if (__name__ == '__main__'):
     # Run game instance
     alien = AlienInvasion()
     alien.run_game()
-    
