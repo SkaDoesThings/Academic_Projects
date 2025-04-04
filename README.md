@@ -1,2 +1,2 @@
-# Python 2025
- Projects for a college class 
+# Academic Projects
+ Projects that I make in school
